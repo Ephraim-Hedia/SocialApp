@@ -9,19 +9,22 @@ import { FeedComponent } from './features/feed/feed.component';
 import { NotificationComponent } from './features/notification/notification.component';
 import { ForgotPasswordComponent } from './features/forgot-password/forgot-password.component';
 import { ChangePasswordComponent } from './features/change-password/change-password.component';
+import { authGuard } from './core/auth/gaurds/auth-guard';
+import { userGuard } from './core/auth/gaurds/user-guard';
 
 export const routes: Routes = [
     {path:"",redirectTo:'login',pathMatch:'full'},
-    {path:"",component:AuthLayoutComponent,children:[
+    {path:"",component:AuthLayoutComponent,canActivate:[userGuard],children:[
         {path:"login",component:LoginComponent,title:"Login"},
         {path:"register",component:RegisterComponent,title:"Register"},
         {path:"forgot-password",component:ForgotPasswordComponent,title:"Forgot Password"},
-        {path:"change-password",component:ChangePasswordComponent,title:"Change Password"},
+
     ]},
-    {path:"",component:MainLayoutComponent,children:[
+    {path:"",component:MainLayoutComponent, canActivate:[authGuard],children:[
         {path:"profile",component:ProfileComponent,title:"Profile"},
         {path:"feed",component:FeedComponent,title:"Feed"},
         {path:"notification",component:NotificationComponent,title:"Notification"},
+        {path:"change-password",component:ChangePasswordComponent,title:"Change Password"}
     ]},
     {path:"**",component:NotfoundComponent,title:"Not Found"},
 ];

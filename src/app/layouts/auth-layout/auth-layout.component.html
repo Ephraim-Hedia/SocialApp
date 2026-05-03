@@ -1,1 +1,44 @@
-<router-outlet></router-outlet>
+<div class="min-h-screen flex items-center justify-center px-4">
+    <div class="container grid lg:grid-cols-2 gap-10 items-center">
+  
+      <!-- LEFT SIDE -->
+      <div class="hidden lg:block space-y-6">
+        <h1 class="text-5xl font-bold text-mainColor">
+          Route Posts
+        </h1>
+  
+        <p class="text-gray-600 text-lg max-w-md">
+          Connect with friends and the world around you on Route Posts.
+        </p>
+  
+        <!-- INFO CARD -->
+        <div class="bg-white rounded-2xl p-6 shadow-md border border-gray-200 max-w-lg">
+          <p class="text-sm tracking-widest text-mainColor font-semibold mb-2">
+            ABOUT ROUTE ACADEMY
+          </p>
+  
+          <h3 class="text-xl font-bold mb-3">
+            Egypt's Leading IT Training Center Since 2012
+          </h3>
+  
+          <p class="text-gray-600 text-sm leading-relaxed mb-5">
+            Route Academy is the premier IT training center in Egypt...
+          </p>
+  
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+            <div class="stat-box">2012<br><span>FOUNDED</span></div>
+            <div class="stat-box">40K+<br><span>GRADUATES</span></div>
+            <div class="stat-box">50+<br><span>PARTNERS</span></div>
+            <div class="stat-box">5<br><span>BRANCHES</span></div>
+            <div class="stat-box">20<br><span>DIPLOMAS</span></div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- RIGHT SIDE -->
+      <div class="w-full max-w-md mx-auto">
+        <router-outlet></router-outlet>
+      </div>
+  
+    </div>
+  </div>

@@ -1,1 +1,112 @@
-<p>register works!</p>
+<div class="bg-white rounded-2xl p-6 shadow-md border border-gray-200">
+
+    <!-- Tabs -->
+    <div class="flex bg-gray-100 rounded-xl p-1 mb-6">
+      <a routerLink="/login"
+         class="flex-1 text-center py-2 rounded-lg font-medium text-gray-500">
+        Login
+      </a>
+  
+      <a routerLink="/register"
+         class="flex-1 text-center py-2 rounded-lg font-medium bg-white shadow">
+        Register
+      </a>
+    </div>
+  
+    <h2 class="text-2xl font-bold mb-1">Create a new account</h2>
+    <p class="text-sm text-gray-500 mb-5">
+      It is quick and easy.
+    </p>
+  
+    <form [formGroup]="registerForm" (ngSubmit)="submitForm()" class="space-y-4">
+
+        <!-- Full Name -->
+        <div  class="input-wrapper">
+          <i class="fa-solid fa-user input-icon"></i>
+          <input formControlName="name" type="text" placeholder="Full name" class="input-style" [class.input-error]="isInvalid('name')" />
+          
+        </div>
+        @if (getError('name')) {
+            <p class="error-text">{{ getError('name') }}</p>
+        }
+      
+        <!-- Username -->
+        <div  class="input-wrapper">
+          <i class="fa-solid fa-at input-icon"></i>
+          <input formControlName="username" type="text" placeholder="Username (optional)" class="input-style"  />
+        </div>
+      
+        <!-- Email -->
+        <div  class="input-wrapper">
+          <i class="fa-solid fa-envelope input-icon"></i>
+          <input formControlName="email" type="email" placeholder="Email address" class="input-style" [class.input-error]="isInvalid('email')" />
+        </div>
+        @if (getError('email')) {
+            <p class="error-text">{{ getError('email') }}</p>
+          }
+      
+        <!-- Gender -->
+        <div  class="input-wrapper">
+          <i class="fa-solid fa-venus-mars input-icon"></i>
+          <select formControlName="gender" class="input-style" [class.input-error]="isInvalid('gender')">
+            <option disabled selected hidden value="">Select gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+        @if (getError('gender')) {
+          <p class="error-text">{{ getError('gender') }}</p>
+        }
+        <!-- Date -->
+        <div  class="input-wrapper">
+          <i class="fa-solid fa-calendar input-icon"></i>
+          <input formControlName="dateOfBirth" type="date" class="input-style" [class.input-error]="isInvalid('dateOfBirth')" />
+        </div>
+        @if (getError('dateOfBirth')) {
+          <p class="error-text">{{ getError('dateOfBirth') }}</p>
+        }
+        <!-- Password -->
+        <div  class="input-wrapper">
+          <i class="fa-solid fa-lock input-icon"></i>
+          <input #password formControlName="password" type="password" placeholder="Password" class="input-style" [class.input-error]="isInvalid('password')"
+          />
+          <i 
+            [class.fa-eye] = "password.type === 'password' "
+            [class.fa-eye-slash]="password.type === 'text'"
+
+            class=" fa-solid absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
+            (click)="togglePassword(password)"
+          ></i>
+        </div>
+        @if (getError('password')) {
+            <p class="error-text">{{ getError('password') }}</p>
+          }
+
+        <!-- Confirm -->
+        <div  class="input-wrapper">
+          <i class="fa-solid fa-lock input-icon"></i>
+          <input #confirmPassword formControlName="rePassword" type="password" placeholder="Confirm password" class="input-style" [class.input-error]="isInvalid('rePassword') || passwordMismatch()"/>
+          <i 
+            [class.fa-eye]="confirmPassword.type === 'password'"
+            [class.fa-eye-slash]="confirmPassword.type === 'text'"
+            class=" fa-solid absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
+            (click)="togglePassword(confirmPassword)"
+          ></i>
+        </div>
+        @if (getError('rePassword')) {
+            <p class="error-text">{{ getError('rePassword') }}</p>
+          }
+          
+          @if (passwordMismatch()) {
+            <p class="error-text">Passwords do not match.</p>
+          }
+      
+        <button class="btn-primary">Create New Account
+          @if (loading) {
+            <i class="fas fa-spinner animate-spin"></i>
+          }
+        </button>
+      
+      </form>
+  
+  </div>

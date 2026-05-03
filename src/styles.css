@@ -15,5 +15,43 @@
 
 body{
     background-color: var(--color-secondColor);
-    font-family: "Encode Sans Expanded", sans-serif;
+    font-family: "Cairo", sans-serif;
+  }
+
+@layer components {
+  .stat-box {
+    @apply border rounded-xl p-3 text-sm text-mainColor font-bold;
+  }
+
+  .stat-box span {
+    @apply text-xs text-gray-500 font-normal;
+  }
+
+  .btn-primary {
+    @apply w-full bg-mainColor text-white py-3 rounded-lg font-semibold hover:opacity-90 transition;
+  }
+  .input-wrapper {
+    @apply relative;
+  }
+
+  .input-icon {
+    @apply absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm;
+  }
+  
+
+  .input-style {
+    @apply w-full rounded-lg border border-gray-200 bg-gray-100 px-4 py-3 pl-10 text-sm 
+           focus:outline-none focus:ring-2 focus:ring-mainColor transition;
+  }
+  .input-wrapper:focus-within .input-icon {
+    @apply text-mainColor;
+  }
+
+  .input-error {
+    @apply border-red-500 ring-red-500 focus:ring-red-500 transition ;
+  }
+
+  .error-text {
+    @apply text-red-500 text-xs mt-0.5;
+  }
 }
