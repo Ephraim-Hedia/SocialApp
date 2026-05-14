@@ -1,0 +1,130 @@
+<div class="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm">
+
+    <!-- User Row -->
+    <div class="flex items-center gap-3 mb-3">
+  
+      <!-- Avatar -->
+      <img
+        [src]="userData()?.photo || 'imgs/default-profile.png'"
+        [alt]="userData()?.name"
+        class="w-10 h-10 rounded-full object-cover shrink-0"
+      />
+  
+      <!-- Name + Privacy -->
+      <div class="flex flex-col gap-1">
+        <span class="text-sm font-bold text-gray-800">{{ userData()?.name }}</span>
+  
+        <!-- Privacy Dropdown Trigger -->
+        <div class="relative">
+          <button
+            (click)="togglePrivacyDropdown()"
+            class="flex items-center gap-1.5 text-xs text-gray-500 border border-gray-200 rounded-lg px-2 py-0.5 hover:bg-gray-50 transition cursor-pointer"
+          >
+            <i [class]="'fa-solid ' + currentPrivacy.icon + ' text-xs'"></i>
+            {{ currentPrivacy.label }}
+            <i class="fa-solid fa-chevron-down text-xs"></i>
+          </button>
+  
+          <!-- Dropdown -->
+          @if (showPrivacyDropdown()) {
+            <div class="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-lg z-10 overflow-hidden w-36">
+              @for (option of privacyOptions; track option.value) {
+                <button
+                  (click)="onPrivacySelect(option.value)"
+                  [class]="privacy() === option.value
+                    ? 'w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-mainColor bg-blue-50 cursor-pointer'
+                    : 'w-full flex items-center gap-2 px-3 py-2 text-xs text-gray-600 hover:bg-gray-50 transition cursor-pointer'"
+                >
+                  <i [class]="'fa-solid ' + option.icon"></i>
+                  {{ option.label }}
+                </button>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  
+    <!-- Textarea -->
+    <textarea
+      [value]="body()"
+      (input)="body.set($any($event.target).value)"
+      placeholder="What's on your mind, {{ userData()?.name }}?"
+      rows="3"
+      class="w-full text-sm text-gray-700 placeholder-gray-400 resize-none outline-none border-b border-gray-100 pb-3 mb-3"
+    ></textarea>
+  
+    <!-- Image Preview -->
+    @if (imagePreview()) {
+      <div class="relative mb-3 rounded-xl overflow-hidden border border-gray-200">
+        <img
+          [src]="imagePreview()"
+          alt="Preview"
+          class="w-full max-h-60 object-cover"
+        />
+        <button
+          (click)="removeImage()"
+          class="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white rounded-full w-7 h-7 flex items-center justify-center transition cursor-pointer"
+        >
+          <i class="fa-solid fa-xmark text-xs"></i>
+        </button>
+      </div>
+    }
+  
+    <!-- Actions Row -->
+    <div class="flex items-center justify-between gap-2">
+  
+      <div class="flex items-center gap-1">
+  
+        <!-- Photo/Video -->
+        <button
+          (click)="fileInput.click()"
+          class="flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-mainColor hover:bg-blue-50 rounded-xl px-3 py-2 transition cursor-pointer"
+        >
+          <i class="fa-regular fa-image text-green-500"></i>
+          <span class="hidden sm:inline">Photo/video</span>
+        </button>
+        <input
+          #fileInput
+          type="file"
+          accept="image/*,video/*"
+          class="hidden"
+          (change)="onFileSelected($event)"
+        />
+  
+        <!-- Feeling / Emoji -->
+        <div class="relative">
+          <button
+            (click)="toggleEmojiPicker()"
+            class="flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-mainColor hover:bg-blue-50 rounded-xl px-3 py-2 transition cursor-pointer"
+          >
+            <i class="fa-regular fa-face-smile text-yellow-400"></i>
+            <span class="hidden sm:inline">Feeling/activity</span>
+          </button>
+  
+          <!-- Emoji Picker -->
+          @if (showEmojiPicker()) {
+            <div class="absolute top-full left-0 mb-2 z-20">
+              <app-emoji-picker (emojiSelected)="onEmojiSelect($event)" />
+            </div>
+          }
+        </div>
+  
+      </div>
+  
+      <!-- Post Button -->
+      <button
+        (click)="onPost()"
+        [disabled]="!canPost || isLoading()"
+        class="flex items-center gap-2 bg-mainColor text-white text-sm font-semibold px-5 py-2 rounded-xl hover:opacity-90 transition disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+      >
+        @if (isLoading()) {
+          <i class="fa-solid fa-spinner fa-spin text-sm"></i>
+        } @else {
+          <i class="fa-solid fa-paper-plane text-sm"></i>
+        }
+        Post
+      </button>
+  
+    </div>
+</div>

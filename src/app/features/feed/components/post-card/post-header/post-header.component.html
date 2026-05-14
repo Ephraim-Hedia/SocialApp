@@ -1,0 +1,65 @@
+<div class=" relative flex items-start justify-between p-4">
+
+    <!-- LEFT -->
+    <div class="flex items-start gap-3">
+  
+      <!-- AVATAR -->
+      <img
+        [src]="post.user.photo"
+        class="w-11 h-11 rounded-full object-cover border"
+      />
+  
+      <!-- USER INFO -->
+      <div>
+  
+        <!-- NAME -->
+        <h3 class="font-semibold text-gray-900 leading-none">
+          {{ post.user.name }}
+        </h3>
+  
+        <!-- USERNAME + TIME + PRIVACY -->
+        <div class="flex items-center gap-2 mt-1 text-xs text-gray-500">
+  
+          <span>@{{ post.user.username }}</span>
+  
+          <span>•</span>
+  
+          <span>{{post.createdAt | date: 'shortTime'}}</span>
+  
+          <span>•</span>
+  
+          <div class="flex items-center gap-1">
+            <i class="fa-solid fa-earth-americas text-[10px]"></i>
+            <span>{{ post.privacy }}</span>
+          </div>
+  
+        </div>
+  
+      </div>
+  
+    </div>
+  
+    <!-- MENU -->
+    <button class=" cursor-pointer text-gray-400 hover:text-gray-600 transition " (click)="toggleMenu()">
+      
+      <i class="fa-solid fa-ellipsis"></i>
+      @if(showMenu) {
+
+        <div class="absolute right-0 top-10 w-40 bg-white border border-gray-200 rounded-xl shadow-md p-2 z-20">
+      
+          <button class="cursor-pointer w-full text-left px-3 py-2 rounded-lg hover:bg-gray-50 text-sm">
+            Edit Post
+          </button>
+      
+          <button class="cursor-pointer w-full text-left px-3 py-2 rounded-lg hover:bg-gray-50 text-sm text-red-500">
+            Delete Post
+          </button>
+      
+        </div>
+      
+      }
+    </button>
+
+    
+  
+  </div>

@@ -1,0 +1,88 @@
+<div class="min-h-screen bg-secondColor py-6">
+    <div class="container max-w-3xl mx-auto px-4">
+  
+      <!-- Back to feed -->
+      <div class="mb-4">
+        <a
+          routerLink="/feed"
+          class="inline-flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-mainColor transition-colors duration-200"
+        >
+          <i class="fa-solid fa-arrow-left text-xs"></i>
+          Back to feed
+        </a>
+      </div>
+  
+      <!-- Main Card -->
+      <div class="bg-white rounded-2xl shadow-sm p-5">
+  
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-user-group text-mainColor text-sm"></i>
+            <h2 class="text-base font-bold text-gray-800">All Suggested Friends</h2>
+          </div>
+          <span class="bg-blue-50 text-mainColor text-xs font-bold px-2.5 py-1 rounded-full">
+            {{ total() }}
+          </span>
+        </div>
+  
+        <!-- Search -->
+        <div class="relative mb-5">
+          <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+          <input
+            type="text"
+            [(ngModel)]="searchQuery"
+            (ngModelChange)="onSearchChange($event)"
+            placeholder="Search by name or username..."
+            class="w-full text-sm text-gray-700 placeholder-gray-400 border border-gray-200 rounded-xl pl-10 pr-4 py-2.5 outline-none focus:ring-2 focus:ring-blue-200 focus:border-transparent transition"
+          />
+        </div>
+  
+        <!-- Loading State -->
+        @if (isLoading()) {
+          <div class="flex justify-center items-center py-16">
+            <i class="fa-solid fa-spinner fa-spin text-mainColor text-2xl"></i>
+          </div>
+        }
+  
+        <!-- Empty State -->
+        @if (!isLoading() && friends.length === 0) {
+          <div class="flex flex-col items-center justify-center py-16 gap-3">
+            <i class="fa-solid fa-user-slash text-gray-300 text-4xl"></i>
+            <p class="text-sm text-gray-400 font-medium">No suggestions found</p>
+          </div>
+        }
+  
+        <!-- Grid -->
+        @if (!isLoading() && friends.length > 0) {
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            @for (friend of friends; track friend._id) {
+              <app-suggestion-card
+                [friend]="friend"
+                (followClicked)="onFriendFollowed($event)"
+              />
+            }
+          </div>
+  
+          <!-- Load More -->
+          @if (hasMore) {
+            <div class="mt-5">
+              <button
+                (click)="loadMore()"
+                [disabled]="isLoadingMore()"
+                class="w-full flex items-center justify-center gap-2 text-sm font-semibold text-gray-600 border border-gray-200 rounded-xl py-3 hover:bg-gray-50 transition-colors duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                @if (isLoadingMore()) {
+                  <i class="fa-solid fa-spinner fa-spin text-mainColor"></i>
+                  Loading...
+                } @else {
+                  Load more users
+                }
+              </button>
+            </div>
+          }
+        }
+  
+      </div>
+    </div>
+  </div>

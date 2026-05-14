@@ -1,0 +1,28 @@
+<div class="bg-white my-2 rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+
+    <!-- HEADER -->
+    <app-post-header [post]="post" />
+  
+    <!-- CONTENT -->
+    <app-post-content [post]="post" />
+  
+    <!-- STATS -->
+    <app-post-stats [post]="post" />
+  
+    <!-- ACTIONS -->
+    <app-post-actions
+      [post]="post"
+      (like)="like.emit(post)"
+      (save)="save.emit(post)"
+      (comment)="toggleComments()"
+    />
+
+    @if(showComments) {
+
+      <app-comments-section
+        [comments]="comments"
+      />
+    
+    }
+  
+  </div>

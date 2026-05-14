@@ -1,0 +1,40 @@
+<div class="container py-4">
+
+    <div class="grid grid-cols-12 gap-4">
+  
+      <!-- LEFT -->
+      <div class="hidden lg:block lg:col-span-3">
+        <div class="sticky top-15">
+          <app-left-sidebar />
+        </div>
+      </div>
+  
+      <!-- CENTER -->
+      <div class="col-span-12 lg:col-span-6">
+  
+        <!-- MOBILE MENU -->
+        <div class="lg:hidden mb-4">
+          <app-left-sidebar />
+        </div>
+         <!-- 👇 Should we add app-right-sidebar here for mobile? -->
+        <div class="lg:hidden mb-4">
+          <app-right-sidebar />
+        </div>
+        
+        <!-- CREATE POST (shared across all feed pages) -->
+        <app-create-post (postCreated)="onPostCreated($event)" />
+        <!-- CONTENT -->
+        <router-outlet></router-outlet>
+  
+      </div>
+  
+      <!-- RIGHT -->
+      <div class="hidden lg:block lg:col-span-3">
+        <div class="sticky top-15">
+          <app-right-sidebar />
+        </div>
+      </div>
+  
+    </div>
+  
+  </div>

@@ -1,1 +1,321 @@
-<p>profile works!</p>
+@if (isLoading()) {
+    <!-- Loading Spinner -->
+    <div class="flex justify-center items-center min-h-screen">
+      <i class="fa-solid fa-spinner fa-spin text-mainColor text-3xl"></i>
+    </div>
+  } @else {
+  
+  <div class="min-h-screen bg-secondColor">
+  
+    <!-- Back button (friend profile only) -->
+    @if (!isMyProfile()) {
+      <div class="container pt-4">
+        <a
+          routerLink="/feed"
+          class="inline-flex mb-2 border-mainColor items-center gap-2 text-sm font-semibold text-gray-600 hover:text-mainColor transition-colors"
+        >
+          <i class="fa-solid fa-arrow-left text-xs"></i>
+          Back
+        </a>    
+      </div>
+    }
+  
+    <!-- ── COVER ── -->
+    <div class="relative w-full h-48 md:h-64 bg-gradient-to-br from-slate-700 to-slate-900 overflow-hidden">
+  
+      @if (isMyProfile() && myProfile()?.cover) {
+        <img [src]="myProfile()!.cover" alt="Cover" class="w-full h-full object-cover" />
+      }
+      @if (!isMyProfile() && friendProfile()?.cover) {
+        <img [src]="friendProfile()!.cover" alt="Cover" class="w-full h-full object-cover" />
+      }
+  
+      <!-- Cover actions (my profile only) -->
+      @if (isMyProfile()) {
+        <div class="absolute top-3 right-3 flex items-center gap-2">
+  
+          @if (hasCover()) {
+            <!-- View Cover -->
+            <a
+              [href]="myProfile()?.cover"
+              target="_blank"
+              class="flex items-center gap-1.5 text-xs font-semibold text-white bg-black/40 hover:bg-black/60 backdrop-blur-sm rounded-lg px-3 py-1.5 transition cursor-pointer"
+            >
+              <i class="fa-solid fa-expand text-xs"></i>
+              View cover
+            </a>
+  
+            <!-- Change Cover -->
+            <button
+              (click)="coverInput.click()"
+              [disabled]="isUploadingCover()"
+              class="flex items-center gap-1.5 text-xs font-semibold text-white bg-black/40 hover:bg-black/60 backdrop-blur-sm rounded-lg px-3 py-1.5 transition cursor-pointer disabled:opacity-50"
+            >
+              @if (isUploadingCover()) {
+                <i class="fa-solid fa-spinner fa-spin text-xs"></i>
+              } @else {
+                <i class="fa-solid fa-camera text-xs"></i>
+              }
+              Change cover
+            </button>
+  
+            <!-- Remove Cover -->
+            <button
+              (click)="removeCover()"
+              [disabled]="isRemovingCover()"
+              class="flex items-center gap-1.5 text-xs font-semibold text-white bg-black/40 hover:bg-black/60 backdrop-blur-sm rounded-lg px-3 py-1.5 transition cursor-pointer disabled:opacity-50"
+            >
+              @if (isRemovingCover()) {
+                <i class="fa-solid fa-spinner fa-spin text-xs"></i>
+              } @else {
+                <i class="fa-solid fa-trash text-xs"></i>
+              }
+              Remove
+            </button>
+  
+          } @else {
+            <!-- Add Cover -->
+            <button
+              (click)="coverInput.click()"
+              [disabled]="isUploadingCover()"
+              class="flex items-center gap-1.5 text-xs font-semibold text-white bg-black/40 hover:bg-black/60 backdrop-blur-sm rounded-lg px-3 py-1.5 transition cursor-pointer disabled:opacity-50"
+            >
+              @if (isUploadingCover()) {
+                <i class="fa-solid fa-spinner fa-spin text-xs"></i>
+              } @else {
+                <i class="fa-solid fa-camera text-xs"></i>
+              }
+              Add cover
+            </button>
+          }
+  
+          <!-- Hidden cover input -->
+          <input
+            #coverInput
+            type="file"
+            accept="image/*"
+            class="hidden"
+            (change)="onCoverSelected($event)"
+          />
+  
+        </div>
+      }
+    </div>
+  
+    <!-- ── PROFILE CARD ── -->
+    <div class="container lg:px-30">
+      <div class="bg-white rounded-2xl shadow-sm p-5 -mt-6 relative z-10">
+  
+        <div class="flex flex-col md:flex-row md:items-start gap-4">
+  
+          <!-- Avatar -->
+          <div class="relative shrink-0 -mt-14 ml-4">
+            <img
+              #myImage
+              [src]="isMyProfile() ? myProfile()?.photo : friendProfile()?.photo"
+              alt="Profile photo"
+              class="w-20 h-20 rounded-full object-cover border-4 border-white shadow"
+            />
+  
+            <!-- Photo action icons (my profile only) -->
+            @if (isMyProfile()) {
+
+              <!-- HOVER LAYER -->
+              <div
+                class="absolute inset-0 rounded-full bg-black/40
+                       flex items-center justify-center gap-2
+                       hover:opacity-100 opacity-0
+                       transition-all duration-300"
+              >
+          
+                <!-- PREVIEW -->
+                <a
+                  [href]="myProfile()?.photo"
+                  target="_blank"
+                  class="w-8 h-8 rounded-full bg-white
+                         flex items-center justify-center"
+                >
+                  <i class="fa-solid fa-expand text-xs text-gray-700"></i>
+                </a>
+          
+                <!-- CHANGE -->
+                <button
+                  (click)="photoInput.click()"
+                  class="cursor-pointer w-8 h-8 rounded-full bg-white
+                         flex items-center justify-center"
+                >
+                  <i class="fa-solid fa-camera text-xs text-gray-700"></i>
+                </button>
+          
+              </div>
+          
+              <input
+                #photoInput
+                type="file"
+                accept="image/*"
+                class="hidden"
+                (change)="onPhotoSelected($event)"
+              />
+          
+            }
+          </div>
+  
+          <!-- Name + username + badge -->
+          <div class="flex-1 mt-2 md:mt-0">
+  
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+  
+              <!-- Left: name info -->
+              <div>
+                <h2 class="text-lg font-bold text-gray-800">
+                  {{ isMyProfile() ? myProfile()?.name : friendProfile()?.name }}
+                </h2>
+                <p class="text-sm text-gray-400">
+                  @{{ isMyProfile() ? myProfile()?.username : friendProfile()?.username }}
+                </p>
+                <span class="inline-flex items-center gap-1 text-xs text-mainColor border border-blue-200 rounded-full px-2 py-0.5 mt-1">
+                  <i class="fa-solid fa-user-group text-xs"></i>
+                  Route Posts member
+                </span>
+              </div>
+  
+              <!-- Right: Follow button (friend only) -->
+              @if (!isMyProfile()) {
+                <button
+                  (click)="toggleFollow()"
+                  [disabled]="isFollowLoading()"
+                  [class]="isFollowing()
+                    ? 'flex items-center gap-2 text-sm font-semibold text-gray-600 border border-gray-300 rounded-xl px-4 py-2 hover:bg-gray-50 transition disabled:opacity-50 cursor-pointer'
+                    : 'flex items-center gap-2 text-sm font-semibold text-white bg-mainColor rounded-xl px-4 py-2 hover:opacity-90 transition disabled:opacity-50 cursor-pointer'"
+                >
+                  @if (isFollowLoading()) {
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                  } @else if (isFollowing()) {
+                    <i class="fa-solid fa-check"></i>
+                  } @else {
+                    <i class="fa-solid fa-user-plus"></i>
+                  }
+                  {{ isFollowing() ? 'Following' : 'Follow' }}
+                </button>
+              }
+  
+            </div>
+  
+            <!-- Stats (my profile only) -->
+            @if (isMyProfile()) {
+              <div class="grid grid-cols-3 gap-3 mt-4">
+                <div class="border border-gray-100 rounded-xl p-3 text-center">
+                  <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Followers</p>
+                  <p class="text-xl font-bold text-gray-800 mt-1">{{ myProfile()?.followersCount ?? 0 }}</p>
+                </div>
+                <div class="border border-gray-100 rounded-xl p-3 text-center">
+                  <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Following</p>
+                  <p class="text-xl font-bold text-gray-800 mt-1">{{ myProfile()?.followingCount ?? 0 }}</p>
+                </div>
+                <div class="border border-gray-100 rounded-xl p-3 text-center">
+                  <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Bookmarks</p>
+                  <p class="text-xl font-bold text-gray-800 mt-1">{{ myProfile()?.bookmarksCount ?? 0 }}</p>
+                </div>
+              </div>
+            }
+  
+          </div>
+  
+        </div>
+  
+        <!-- About + My Posts/Saved counts (my profile only) -->
+        @if (isMyProfile()) {
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5">
+  
+            <!-- About -->
+            <div class="border border-gray-100 rounded-xl p-4">
+              <p class="text-sm font-bold text-gray-700 mb-3">About</p>
+              <div class="space-y-2">
+                <div class="flex items-center gap-2 text-sm text-gray-500">
+                  <i class="fa-regular fa-envelope text-mainColor"></i>
+                  {{ myProfile()?.email }}
+                </div>
+                <div class="flex items-center gap-2 text-sm text-gray-500">
+                  <i class="fa-solid fa-user-group text-mainColor"></i>
+                  Active on Route Posts
+                </div>
+              </div>
+            </div>
+  
+            <!-- My Posts + Saved counts -->
+            <div class="flex flex-col gap-3">
+              <div class="border border-gray-100 rounded-xl p-4">
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-wide">My Posts</p>
+                <p class="text-2xl font-bold text-gray-800 mt-1">{{ myPostsCount() }}</p>
+              </div>
+              <div class="border border-gray-100 rounded-xl p-4">
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-wide">Saved Posts</p>
+                <p class="text-2xl font-bold text-gray-800 mt-1">{{ myProfile()?.bookmarksCount ?? 0 }}</p>
+              </div>
+            </div>
+  
+          </div>
+        }
+  
+      </div>
+    </div>
+  
+    <!-- ── TABS + POSTS ── -->
+    <div class="container lg:px-30 mt-4 pb-8">
+  
+      <!-- Tabs (my profile only) -->
+      @if (isMyProfile()) {
+        <div class="bg-white rounded-2xl shadow-sm px-4 py-3 flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+  
+            <button
+              (click)="onTabChange('posts')"
+              [class]="activeTab() === 'posts'
+                ? 'flex items-center gap-2 text-sm font-semibold text-mainColor bg-blue-50 rounded-xl px-4 py-2 cursor-pointer'
+                : 'flex items-center gap-2 text-sm font-semibold text-gray-500 hover:bg-gray-50 rounded-xl px-4 py-2 transition cursor-pointer'"
+            >
+              <i class="fa-regular fa-file-lines"></i>
+              My Posts
+            </button>
+  
+            <button
+              (click)="onTabChange('saved')"
+              [class]="activeTab() === 'saved'
+                ? 'flex items-center gap-2 text-sm font-semibold text-mainColor bg-blue-50 rounded-xl px-4 py-2 cursor-pointer'
+                : 'flex items-center gap-2 text-sm font-semibold text-gray-500 hover:bg-gray-50 rounded-xl px-4 py-2 transition cursor-pointer'"
+            >
+              <i class="fa-regular fa-bookmark"></i>
+              Saved
+            </button>
+  
+          </div>
+  
+          <!-- Post count badge -->
+          <span class="bg-blue-50 text-mainColor text-xs font-bold px-2.5 py-1 rounded-full">
+            {{ activeTab() === 'posts' ? myPostsCount() : myProfile()?.bookmarksCount ?? 0 }}
+          </span>
+        </div>
+      }
+  
+      <!-- Posts list -->
+      <div class="space-y-4">
+        @if (posts().length > 0) {
+          @for (post of posts(); track post._id) {
+            <app-post-card
+              [post]="post"
+              (like)="toggleLike(post)"
+              (save)="toggleSave(post)"
+            />
+          }
+        } @else {
+          <div class="bg-white rounded-2xl shadow-sm p-8 text-center text-gray-400 text-sm">
+            No posts yet.
+          </div>
+        }
+      </div>
+  
+    </div>
+  
+  </div>
+  
+  } <!-- end isLoading -->

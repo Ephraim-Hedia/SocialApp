@@ -1,0 +1,61 @@
+<div class="grid grid-cols-4 border-t border-gray-100">
+
+  <!-- LIKE -->
+  <button
+    (click)="like.emit()"
+    class="cursor-pointer flex items-center justify-center gap-2 py-3 hover:bg-gray-50 transition text-sm font-medium"
+
+    [class.text-mainColor]="post.isLiked"
+    [class.text-gray-600]="!post.isLiked">
+
+    <i
+      class="fa-thumbs-up"
+      [class.fa-solid]="post.isLiked"
+      [class.fa-regular]="!post.isLiked">
+    </i>
+
+    <span>Like</span>
+
+  </button>
+
+  <!-- COMMENT -->
+  <button
+    (click)="comment.emit()"
+    class="cursor-pointer flex items-center justify-center gap-2 py-3 hover:bg-gray-50 transition text-sm text-gray-600">
+
+    <i class="fa-regular fa-comment"></i>
+
+    <span>Comment</span>
+
+  </button>
+
+  <!-- SHARE -->
+  <button
+    (click)="share.emit()"
+    class="cursor-pointer flex items-center justify-center gap-2 py-3 hover:bg-gray-50 transition text-sm text-gray-600">
+
+    <i class="fa-regular fa-paper-plane"></i>
+
+    <span>Share</span>
+
+  </button>
+
+  <!-- SAVE -->
+  <button
+    (click)="save.emit()"
+    class="cursor-pointer flex items-center justify-center gap-2 py-3 hover:bg-gray-50 transition text-sm font-medium"
+
+    [class.text-mainColor]="post.bookmarked"
+    [class.text-gray-600]="!post.bookmarked">
+
+    <i
+      class="fa-bookmark"
+      [class.fa-solid]="post.bookmarked"
+      [class.fa-regular]="!post.bookmarked">
+    </i>
+
+    <span>Save</span>
+
+  </button>
+
+</div>

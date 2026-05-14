@@ -1,0 +1,21 @@
+
+    <!-- CONTENT -->
+<div class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+  <div class="space-y-4">  
+    @if(posts.length > 0 )
+    {
+      @for(post of posts; track post._id) {           
+        <app-post-card
+          [post]="post"
+          (like)="toggleLike(post)"
+          (save)="toggleSave(post)"
+        />         
+      }      
+    }
+    @else {
+      <div class="rounded-2xl bg-white text-center text-slate-500 ">No posts yet. Be the first one to publish.</div>
+    }           
+  </div>
+</div>
+    
+  

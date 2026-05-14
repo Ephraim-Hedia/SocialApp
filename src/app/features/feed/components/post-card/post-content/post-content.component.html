@@ -1,0 +1,38 @@
+<div class="px-4 pb-3 space-y-3">
+
+    <!-- TEXT -->
+    @if(post.body) {
+      <p class="text-sm text-gray-800 whitespace-pre-line break-words">
+        {{ post.body }}
+      </p>
+    }
+  
+    <!-- IMAGE -->
+    @if(post.image) {
+  
+      <div class="rounded-xl overflow-hidden border border-gray-200">
+  
+        <img
+          [src]="post.image"
+          class="w-full object-cover max-h-[500px] cursor-pointer"
+          (click)="openPreview()"
+        />
+        @if(showPreview) {
+
+          <div
+            class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+            (click)="closePreview()">
+        
+            <img
+              [src]="post.image"
+              class="max-w-full max-h-full rounded-xl"
+            />
+        
+          </div>
+        
+        }
+      </div>
+  
+    }
+  
+  </div>

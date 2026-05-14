@@ -1,0 +1,99 @@
+<div class="border-t border-gray-100 p-4 space-y-4">
+
+    <!-- COMMENT INPUT -->
+    <div class="flex items-start gap-3">
+  
+      <!-- AVATAR -->
+      <img
+        src="imgs/default-profile.png"
+        class="w-10 h-10 rounded-full object-cover border"
+      />
+  
+      <!-- INPUT -->
+      <div class="flex-1">
+  
+        <div class="relative">
+  
+          <input
+            [(ngModel)]="commentContent"
+            type="text"
+            placeholder="Write a comment..."
+            class="w-full bg-gray-100 border border-gray-200 rounded-full px-4 py-3 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-mainColor"
+          />
+  
+          <!-- SEND -->
+          <button
+            (click)="submitComment()"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-mainColor">
+  
+            <i class="fa-solid fa-paper-plane"></i>
+  
+          </button>
+  
+        </div>
+  
+      </div>
+  
+    </div>
+  
+    <!-- COMMENTS -->
+    <div class="space-y-4">
+  
+      @for(comment of comments; track comment._id) {
+  
+        <div class="flex items-start gap-3">
+  
+          <!-- USER IMAGE -->
+          <img
+            [src]="comment.user.photo"
+            class="w-10 h-10 rounded-full object-cover border"
+          />
+  
+          <!-- CONTENT -->
+          <div class="flex-1">
+  
+            <!-- COMMENT BUBBLE -->
+            <div class="bg-gray-100 rounded-2xl px-4 py-3">
+  
+              <div class="flex items-center gap-2 mb-1">
+  
+                <h4 class="font-semibold text-sm text-gray-900">
+                  {{ comment.user.name }}
+                </h4>
+  
+                <span class="text-xs text-gray-500">
+                  @{{ comment.user.username }}
+                </span>
+  
+              </div>
+  
+              <p class="text-sm text-gray-700 break-words">
+                {{ comment.content }}
+              </p>
+  
+            </div>
+  
+            <!-- ACTIONS -->
+            <div class="flex items-center gap-4 mt-2 px-2 text-xs text-gray-500">
+  
+              <button class="hover:text-mainColor transition">
+                Like
+              </button>
+  
+              <button class="hover:text-mainColor transition">
+                Reply
+              </button>
+  
+              <span>2h</span>
+  
+            </div>
+  
+          </div>
+  
+        </div>
+  
+      }
+  
+    </div>
+  
+  </div>
