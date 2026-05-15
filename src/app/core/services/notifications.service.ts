@@ -15,7 +15,10 @@ export class NotificationsService {
 
   getNotification(unread:boolean = false,page : number = 1 , limit: number = 10):Observable<any>
   {
-    return this.httpclint.get(`${environment.baseUrl}/notifications?unread=${unread}&page=${page}&limit=${limit}`,this.header)
+    if (unread === false )
+      return this.httpclint.get(`${environment.baseUrl}/notifications?page=${page}&limit=${limit}`,this.header)
+    else 
+      return this.httpclint.get(`${environment.baseUrl}/notifications?unread=${unread}&page=${page}&limit=${limit}`,this.header)
   }
 
   getNotificationCount():Observable<any>
@@ -25,11 +28,12 @@ export class NotificationsService {
 
   markNotificationAsRead(notificationId:string):Observable<any>
   {
-    return this.httpclint.patch(`${environment.baseUrl}/notifications/${notificationId}/read`,this.header)
+    return this.httpclint.patch(`${environment.baseUrl}/notifications/${notificationId}/read`,notificationId,this.header)
+    
   }
 
   markAllNotificationAsRead():Observable<any>
   {
-    return this.httpclint.patch(`${environment.baseUrl}/notifications/read-all`,this.header)
+    return this.httpclint.patch(`${environment.baseUrl}/notifications/read-all`,null,this.header)
   }
 }

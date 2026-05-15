@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { Post } from '../../../../../core/models/post.interface';
-import { DatePipe } from '@angular/common';
+import { TimeAgoPipe } from '../../../../../shared/pipes/time-ago-pipe';
 
 @Component({
   selector: 'app-post-header',
-  imports: [DatePipe],
+  imports: [TimeAgoPipe],
   templateUrl: './post-header.component.html',
   styleUrl: './post-header.component.css',
 })

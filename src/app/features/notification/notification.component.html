@@ -1,1 +1,191 @@
-<p>notification works!</p>
+<div class="min-h-screen bg-secondColor py-6">
+    <div class="container max-w-3xl mx-auto px-4">
+      <div class="bg-white rounded-2xl shadow-sm p-5">
+  
+        <!-- Header -->
+        <div class="flex items-start justify-between mb-1">
+          <div>
+            <h2 class="text-xl font-bold text-gray-800">Notifications</h2>
+            <p class="text-sm text-gray-400 mt-0.5">
+              Realtime updates for likes, comments, shares, and follows.
+            </p>
+          </div>
+  
+          <!-- Mark all as read -->
+          <button
+            (click)="markAllAsRead()"
+            [disabled]="isMarkingAll() || unreadCount() === 0"
+            class="flex items-center gap-2 text-sm font-semibold text-gray-600 border border-gray-200 rounded-xl px-4 py-2 hover:bg-gray-50 transition disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shrink-0"
+          >
+            @if (isMarkingAll()) {
+              <i class="fa-solid fa-spinner fa-spin"></i>
+            } @else {
+              <i class="fa-solid fa-check-double"></i>
+            }
+            Mark all as read
+          </button>
+        </div>
+  
+        <!-- Tabs -->
+        <div class="flex items-center gap-2 mb-5 mt-4">
+  
+          <button
+            (click)="onTabChange('all')"
+            [class]="activeTab() === 'all'
+              ? 'text-sm font-semibold text-white bg-mainColor rounded-full px-5 py-1.5 cursor-pointer'
+              : 'text-sm font-semibold text-gray-500 hover:bg-gray-100 rounded-full px-5 py-1.5 transition cursor-pointer'"
+          >
+            All
+          </button>
+  
+          <button
+            (click)="onTabChange('unread')"
+            [class]="activeTab() === 'unread'
+              ? 'flex items-center gap-2 text-sm font-semibold text-white bg-mainColor rounded-full px-5 py-1.5 cursor-pointer'
+              : 'flex items-center gap-2 text-sm font-semibold text-gray-500 hover:bg-gray-100 rounded-full px-5 py-1.5 transition cursor-pointer'"
+          >
+            Unread
+            @if (unreadCount() > 0) {
+              <span class="bg-white/30 text-current text-xs font-bold px-1.5 py-0.5 rounded-full"
+                [class.bg-blue-100]="activeTab() !== 'unread'"
+                [class.text-mainColor]="activeTab() !== 'unread'"
+              >
+                {{ unreadCount() }}
+              </span>
+            }
+          </button>
+  
+        </div>
+  
+        <!-- Loading -->
+        @if (isLoading()) {
+          <div class="flex justify-center py-12">
+            <i class="fa-solid fa-spinner fa-spin text-mainColor text-2xl"></i>
+          </div>
+        }
+  
+        <!-- Empty -->
+        @if (!isLoading() && notifications().length === 0) {
+          <div class="flex flex-col items-center justify-center py-12 gap-3">
+            <i class="fa-regular fa-bell-slash text-gray-300 text-4xl"></i>
+            <p class="text-sm text-gray-400">No notifications yet</p>
+          </div>
+        }
+  
+        <!-- Notification List -->
+        @if (!isLoading() && notifications().length > 0) {
+          <div class="space-y-3">
+            @for (notif of notifications(); track notif._id) {
+  
+              <!-- Card -->
+              <div
+                [class]="notif.isRead
+                  ? 'rounded-2xl border border-gray-100 p-4 bg-white transition'
+                  : 'rounded-2xl border border-blue-100 p-4 bg-blue-50 transition'"
+              >
+                <div class="flex items-start gap-3">
+  
+                  <!-- Avatar -->
+                  <img
+                    [src]="notif.actor.photo || 'imgs/default-profile.png'"
+                    [alt]="notif.actor.name"
+                    class="w-10 h-10 rounded-full object-cover shrink-0"
+                  />
+  
+                  <!-- Content -->
+                  <div class="flex-1 min-w-0">
+  
+                    <!-- Top row: message + time + unread dot -->
+                    <div class="flex items-start justify-between gap-2">
+                      <p class="text-sm text-gray-700 leading-snug">
+                        <a
+                          [routerLink]="['/profile', notif.actor._id]"
+                          class="font-bold text-gray-900 hover:text-mainColor transition"
+                        >
+                          {{ notif.actor.name }}
+                        </a>
+                        {{ getNotifMessage(notif.type) }}
+                      </p>
+  
+                      <div class="flex items-center gap-1.5 shrink-0">
+                        <span class="text-xs text-gray-400">
+                            {{ notif.createdAt | timeAgo }}
+                        </span>
+                        @if (!notif.isRead) {
+                          <span class="w-2 h-2 rounded-full bg-blue-500 shrink-0"></span>
+                        }
+                      </div>
+                    </div>
+  
+                    <!-- Entity body preview -->
+                    @if (notif.entity?.body) {
+                      <p class="text-xs text-gray-400 mt-0.5 truncate">
+                        {{ notif.entity.body }}
+                      </p>
+                    }
+  
+                    <!-- Bottom row: type icon + action -->
+                    <div class="flex items-center gap-3 mt-2">
+  
+                      <!-- Type icon -->
+                      <i [class]="getNotifIcon(notif.type) + ' text-sm'"></i>
+  
+                      <!-- Mark as read / Read -->
+                      @if (!notif.isRead) {
+                        <button
+                          (click)="markAsRead(notif)"
+                          class="flex items-center gap-1 text-xs font-semibold text-mainColor hover:underline transition cursor-pointer"
+                        >
+                          <i class="fa-solid fa-check text-xs"></i>
+                          Mark as read
+                        </button>
+                      } @else {
+                        <span class="flex items-center gap-1 text-xs text-gray-400">
+                          <i class="fa-solid fa-check text-xs"></i>
+                          Read
+                        </span>
+                      }
+  
+                      <!-- Navigate to post (non-follow types) -->
+                      @if (notif.type !== 'follow' && notif.entity?._id) {
+                        <a
+                          [routerLink]="['/posts', notif.entity._id]"
+                          (click)="markAsRead(notif)"
+                          class="text-xs font-semibold text-gray-400 hover:text-mainColor transition ml-auto"
+                        >
+                          View post
+                          <i class="fa-solid fa-arrow-right text-xs ml-1"></i>
+                        </a>
+                      }
+  
+                    </div>
+                  </div>
+                </div>
+              </div>
+  
+            }
+          </div>
+  
+          <!-- Load More -->
+          @if (hasMore()) {
+            <div class="mt-4">
+              <button
+                (click)="loadMore()"
+                [disabled]="isLoadingMore()"
+                class="w-full flex items-center justify-center gap-2 text-sm font-semibold text-gray-600 border border-gray-200 rounded-xl py-3 hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              >
+                @if (isLoadingMore()) {
+                  <i class="fa-solid fa-spinner fa-spin text-mainColor"></i>
+                  Loading...
+                } @else {
+                  Load more
+                }
+              </button>
+            </div>
+          }
+  
+        }
+  
+      </div>
+    </div>
+  </div>
