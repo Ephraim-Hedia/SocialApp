@@ -1,16 +1,17 @@
 export interface Comment {
+  _id:            string;
+  content:        string;
+  commentCreator: CommentCreator;
+  post:           string;
+  parentComment:  null;
+  likes:          any[];
+  createdAt:      Date;
+  repliesCount:   number;
+}
 
-    _id: string;
-  
-    content: string;
-  
-    createdAt: string;
-  
-    user: {
-      _id: string;
-      name: string;
-      username: string;
-      photo: string;
-    };
-  
-  }
+export interface CommentCreator {
+  _id:      string;
+  name:     string;
+  username: string;
+  photo:    string;
+}
