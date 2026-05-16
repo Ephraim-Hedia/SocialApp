@@ -16,6 +16,7 @@ import { CommunityPostsComponent } from './features/feed/pages/community-posts/c
 import { SavedPostsComponent } from './features/feed/pages/saved-posts/saved-posts.component';
 import { FeedLayoutComponent } from './layouts/feed-layout/feed-layout.component';
 import { SuggestionsComponent } from './features/suggestions/suggestions.component';
+import { SinglePostComponent } from './features/single-post/single-post.component';
 
 export const routes: Routes = [
     {path:"",redirectTo:'login',pathMatch:'full'},
@@ -42,8 +43,8 @@ export const routes: Routes = [
           { path: 'profile/:id', component: ProfileComponent, title: 'Profile Page' },
           { path: 'change-password',component : ChangePasswordComponent , title : 'Forget Password Page' },
           { path: 'notification',component : NotificationComponent , title : 'Notification Page' },
-          { path: 'suggestions',component : SuggestionsComponent , title : 'Suggestions Page' }
-
+          { path: 'suggestions',component : SuggestionsComponent , title : 'Suggestions Page' },
+          { path: 'posts/:id', component: SinglePostComponent, title: 'Post' }
         ]
       },
     {path:"**",component:NotfoundComponent,title:"Not Found"},

@@ -12,6 +12,14 @@
       <span>{{ post.sharesCount }} shares</span>
   
       <span>{{ post.commentsCount }} comments</span>
+
+      <!-- View Details -->
+      <a
+        [routerLink]="['/posts', post._id]"
+        class="font-semibold text-mainColor hover:underline transition-colors duration-200"
+      >
+        View details
+      </a>
   
     </div>
   

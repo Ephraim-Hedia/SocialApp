@@ -1,7 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Post } from '../../../../core/models/post.interface';
 import { PostsService } from '../../../../core/services/posts.service';
 import { PostCardComponent } from '../../components/post-card/post-card.component';
+import { PostActionsService } from '../../../../core/services/post-actions.service';
 
 @Component({
   selector: 'app-saved-posts',
@@ -9,12 +10,16 @@ import { PostCardComponent } from '../../components/post-card/post-card.componen
   templateUrl: './saved-posts.component.html',
   styleUrl: './saved-posts.component.css',
 })
-export class SavedPostsComponent {
-  posts : Post[] = []
-  postsService = inject(PostsService)
+export class SavedPostsComponent implements OnInit {
+  private readonly postsService = inject(PostsService);
+  private readonly postActionsService = inject(PostActionsService);
+
+  posts: Post[] = [];
+
   ngOnInit(): void {
-    this.getAllPosts()
+    this.getAllPosts();
   }
+
 
   getAllPosts()
   {
@@ -27,54 +32,20 @@ export class SavedPostsComponent {
         console.log(err)
       },
       complete : ()=> {
-        const userData = localStorage.getItem('user');
-
-        if (userData) {
-          const currentUser = JSON.parse(userData);
-
-          this.posts.forEach(post => {
-            post.isLiked = post.likes.includes(currentUser._id);
-          });
-        }
+        this.posts = this.postActionsService.normalizePostsLikes(this.posts);
       }
     })
   }
 
-  toggleLike(post: Post) {
-    this.postsService.like_unlikePost(post._id).subscribe({
-      next:(res)=>{
-        console.log(res)
-        if(res.data.liked == true)
-        {
-          post.likesCount++; 
-          post.isLiked = true
-        }
-        else if (res.data.liked == false){
-          post.likesCount--; 
-          post.isLiked = false
-        }
-      },
-      error : (err)=>{
-        console.log(err)
-      },
-      complete : ()=>{
-
-      }
-    })
-
+  toggleLike(post: Post): void {
+    this.postActionsService.toggleLike(post).subscribe({
+      error: (err) => console.log(err),
+    });
   }
-  
-  toggleSave(post: Post) {
-    this.postsService.bookmark_Unbookmark(post._id).subscribe({
-      next :(res)=> {
-        console.log(res)
-      },
-      error : (err) => {
-        console.log(err)
-      },
-      complete : ()=>{
-        post.bookmarked = ! post.bookmarked
-      }
-    })
+
+  toggleSave(post: Post): void {
+    this.postActionsService.toggleSave(post).subscribe({
+      error: (err) => console.log(err),
+    });
   }
 }

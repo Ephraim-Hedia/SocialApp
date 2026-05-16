@@ -1,0 +1,46 @@
+<div class="min-h-screen bg-secondColor py-6">
+    <div class="container max-w-3xl mx-auto px-4">
+  
+      <!-- Back Button -->
+      <div class="mb-4">
+        <button
+          (click)="goBack()"
+          class="inline-flex items-center gap-2 text-sm font-semibold text-gray-600 hover:text-mainColor transition-colors duration-200 cursor-pointer"
+        >
+          <i class="fa-solid fa-arrow-left text-xs"></i>
+          Back
+        </button>
+      </div>
+  
+      <!-- Loading -->
+      @if (isLoading()) {
+        <div class="flex justify-center items-center py-20">
+          <i class="fa-solid fa-spinner fa-spin text-mainColor text-3xl"></i>
+        </div>
+      }
+  
+      <!-- Not Found -->
+      @if (!isLoading() && isNotFound()) {
+        <div class="bg-white rounded-2xl shadow-sm p-12 text-center">
+          <i class="fa-solid fa-circle-exclamation text-gray-300 text-5xl mb-4"></i>
+          <p class="text-gray-500 font-medium">Post not found.</p>
+          <button
+            (click)="goBack()"
+            class="mt-4 text-sm font-semibold text-mainColor hover:underline cursor-pointer"
+          >
+            Go back
+          </button>
+        </div>
+      }
+  
+      <!-- Post -->
+      @if (!isLoading() && post()) {
+        <app-post-card
+          [post]="post()!"
+          (like)="toggleLike($event)"
+          (save)="toggleSave($event)"
+        />
+      }
+  
+    </div>
+  </div>

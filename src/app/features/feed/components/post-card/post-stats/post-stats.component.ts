@@ -1,9 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { Post } from '../../../../../core/models/post.interface';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-post-stats',
-  imports: [],
+  standalone:true,
+  imports: [RouterLink],
   templateUrl: './post-stats.component.html',
   styleUrl: './post-stats.component.css',
 })

@@ -7,6 +7,7 @@ import { UsersService } from '../../core/services/users.service';
 import { PostsService } from '../../core/services/posts.service';
 import { MyProfileData } from '../../core/models/my-profile-data.interface';
 import { Post } from '../../core/models/post.interface';
+import { PostActionsService } from '../../core/services/post-actions.service';
 
 type ProfileTab = 'posts' | 'saved';
 @Component({
@@ -16,6 +17,8 @@ type ProfileTab = 'posts' | 'saved';
   styleUrl: './profile.component.css',
 })
 export class ProfileComponent implements OnInit {
+  // ADD this injection:
+  private readonly postActionsService = inject(PostActionsService);
   private readonly route = inject(ActivatedRoute);
   private readonly usersService = inject(UsersService);
   private readonly postsService = inject(PostsService);
@@ -223,27 +226,34 @@ export class ProfileComponent implements OnInit {
   // ─── POST ACTIONS ─────────────────────────────────────────
 
   toggleLike(post: Post): void {
-    this.postsService.like_unlikePost(post._id).subscribe({
-      next: (res) => {
-        this.posts.update(list =>
-          list.map(p => p._id === post._id ? {
-            ...p,
-            likesCount: res.data.liked ? p.likesCount + 1 : p.likesCount - 1,
-            isLiked: res.data.liked,
-          } : p)
-        );
-      },
+    this.postActionsService.toggleLike(post).subscribe({
       error: (err) => console.log(err),
     });
   }
-
+  
   toggleSave(post: Post): void {
-    this.postsService.bookmark_Unbookmark(post._id).subscribe({
-      complete: () => {
-        this.posts.update(list =>
-          list.map(p => p._id === post._id
-            ? { ...p, bookmarked: !p.bookmarked } : p)
-        );
+    // capture the state BEFORE tap() flips it
+    const wasBookmarked = post.bookmarked;
+  
+    this.postActionsService.toggleSave(post).subscribe({
+      next: () => {
+        if (!wasBookmarked) {
+          // user just bookmarked → add to savedPosts + increment count
+          this.savedPosts.update(list => [post, ...list]);
+          this.myProfile.update(p => p ? {
+            ...p,
+            bookmarksCount: p.bookmarksCount + 1
+          } : p);
+        } else {
+          // user just unbookmarked → remove from savedPosts + decrement count
+          this.savedPosts.update(list =>
+            list.filter(p => p._id !== post._id)
+          );
+          this.myProfile.update(p => p ? {
+            ...p,
+            bookmarksCount: p.bookmarksCount - 1
+          } : p);
+        }
       },
       error: (err) => console.log(err),
     });

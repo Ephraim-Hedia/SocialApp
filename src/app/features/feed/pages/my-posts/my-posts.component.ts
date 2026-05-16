@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { PostsService } from '../../../../core/services/posts.service';
 import { Post } from '../../../../core/models/post.interface';
 import { PostCardComponent } from '../../components/post-card/post-card.component';
+import { PostActionsService } from '../../../../core/services/post-actions.service';
 
 @Component({
   selector: 'app-my-posts',
@@ -12,7 +13,7 @@ import { PostCardComponent } from '../../components/post-card/post-card.componen
 export class MyPostsComponent {
   
   private readonly postsService = inject(PostsService)
-
+  private readonly postActionsService = inject(PostActionsService)
   posts: Post[] = []
 
   ngOnInit(): void {
@@ -30,17 +31,21 @@ export class MyPostsComponent {
           console.log(err)
         },
         complete : ()=>{
-
+          this.posts = this.postActionsService.normalizePostsLikes(this.posts);
         }
       }
     )
   }
 
-  toggleLike(post: Post) {
-    post.likesCount++; 
+  toggleLike(post: Post): void {
+    this.postActionsService.toggleLike(post).subscribe({
+      error: (err) => console.log(err),
+    });
   }
   
-  toggleSave(post: Post) {
-    post.bookmarked = !post.bookmarked;
+  toggleSave(post: Post): void {
+    this.postActionsService.toggleSave(post).subscribe({
+      error: (err) => console.log(err),
+    });
   }
 }
