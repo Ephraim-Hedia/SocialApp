@@ -2,15 +2,9 @@ export interface Post {
     _id: string;
     body?: string;
     image?: string;
-  
     privacy: 'public' | 'friends' | 'private';
   
-    user: {
-      _id: string;
-      name: string;
-      username: string;
-      photo: string;
-    };
+    user: User;
   
     likesCount: number;
     commentsCount: number;
@@ -20,9 +14,24 @@ export interface Post {
   
     bookmarked: boolean;
     isShare: boolean;
-  
+    topComment:    TopComment;
     likes: string[];
     
     // add this
     isLiked?: boolean;
   }
+  export interface TopComment {
+    _id:            string;
+    content:        string;
+    commentCreator: User;
+    post:           string;
+    parentComment:  null;
+    likes:          any[];
+    createdAt:      Date;
+}
+export interface User {
+  _id:      string;
+  name:     string;
+  username: string;
+  photo:    string;
+}
