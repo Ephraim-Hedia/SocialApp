@@ -34,6 +34,7 @@
   <div class="divide-y divide-gray-100">
     @for (friend of friends; track friend._id) {
       <app-friend-card
+      
         [friend]="friend"
         (followClicked)="onFriendFollowed($event)"
       />

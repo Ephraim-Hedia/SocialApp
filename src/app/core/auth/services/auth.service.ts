@@ -28,14 +28,6 @@ export class AuthService {
   }
 
   changePassword(data:object):Observable<any>{
-    console.log("From the Service",data)
-    if(localStorage.getItem('token') != null)
-    {
-      this.token = localStorage.getItem('token')!
-    }
-
-    return this.httpClient.patch(environment.baseUrl+"/users/change-password",data,{
-      headers:{"token":this.token}
-    })
+    return this.httpClient.patch(environment.baseUrl+"/users/change-password",data)
   }
 }

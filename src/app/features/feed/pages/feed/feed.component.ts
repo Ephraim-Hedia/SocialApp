@@ -24,8 +24,10 @@ export class FeedComponent implements OnInit {
     effect(() => {
       const newPost = this.postStateService.newPost();
       if (newPost) {
-        this.posts.unshift(newPost);
-        this.postStateService.clearNewPost();
+        const exists = this.posts.some(p => p._id === newPost._id);
+        if (!exists) {
+          this.posts.unshift(newPost);
+        }
       }
     });
   }

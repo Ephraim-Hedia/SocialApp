@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Suggestions } from '../../../../../core/models/suggestions.interface';
+import { RouterLink } from "@angular/router";
 export interface Friend {
   id: number;
   name: string;
@@ -10,7 +11,7 @@ export interface Friend {
 
 @Component({
   selector: 'app-friend-card',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './friend-card.component.html',
   styleUrl: './friend-card.component.css',
 })

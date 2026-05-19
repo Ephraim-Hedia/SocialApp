@@ -17,12 +17,8 @@
       (comment)="toggleComments()"
     />
 
-    @if(showComments) {
-
-      <app-comments-section
-        [comments]="comments"
-      />
-    
+    @if (showComments) {
+      <app-comments-section [post]="post" />
     }
   
   </div>

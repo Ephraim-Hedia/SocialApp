@@ -4,7 +4,7 @@
     <div class="flex items-center justify-between gap-3">
   
       <!-- Avatar + Info -->
-      <div class="flex items-center gap-3 min-w-0">
+      <div [routerLink]="['/profile',friend._id]"  class="cursor-pointer flex items-center gap-3 min-w-0">
         <img
           [src]="friend.photo"
           [alt]="friend.name"

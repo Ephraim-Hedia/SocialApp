@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Suggestions } from '../../../core/models/suggestions.interface';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-suggestion-card',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './suggestion-card.component.html',
   styleUrl: './suggestion-card.component.css',
 })

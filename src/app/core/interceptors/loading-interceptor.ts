@@ -1,0 +1,28 @@
+import { HttpInterceptorFn } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { finalize } from 'rxjs';
+
+// track concurrent requests count
+// so spinner only hides when ALL requests are done
+let activeRequests = 0;
+
+export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
+  const spinner = inject(NgxSpinnerService);
+
+  // show spinner on first request
+  if (activeRequests === 0) {
+    spinner.show();
+  }
+  activeRequests++;
+
+  return next(req).pipe(
+    finalize(() => {
+      activeRequests--;
+      // hide spinner only when all requests are done
+      if (activeRequests === 0) {
+        spinner.hide();
+      }
+    })
+  );
+};

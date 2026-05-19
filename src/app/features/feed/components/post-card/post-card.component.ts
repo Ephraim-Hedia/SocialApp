@@ -22,25 +22,9 @@ export class PostCardComponent {
   @Output() like = new EventEmitter<Post>();
   @Output() save = new EventEmitter<Post>();
 
-
-  comments = [
-    {
-      _id: '1',
-      content: 'Awesome post 🔥',
-  
-      createdAt: '',
-  
-      user: {
-        _id: '1',
-        name: 'Larissa',
-        username: 'hahiholer',
-        photo: 'imgs/default-profile.png'
-      }
-    }
-  ];
   showComments = false;
 
-  toggleComments() {
+  toggleComments(): void {
     this.showComments = !this.showComments;
   }
 }
